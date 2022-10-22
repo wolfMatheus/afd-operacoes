@@ -47,10 +47,10 @@ AFD *minimizacao(AFD *afd);
  * reconhecimento de cada uma das palavras.
  * @param afd: afd que recebera as palavras como entrada.
  * @param words: palavras que serao inseridas no afd.
- * @param size: tamanho do array de palavras.
+ * @param tamanho: tamanho do array de palavras.
  * @return array correspondente aos resultados do reconhecimento das palavras, 1 para reconhecida e 0 para nao reconhecida.
 */
-int *reconhecer(AFD *afd, char **words, int size);
+int *reconhecer(AFD *afd, char **words, int tamanho);
 
 /**
  * Aplica a operacao listada no contexto de aplicacao informado. Interessante notar que esse contexto ja eh considerado como

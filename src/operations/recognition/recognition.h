@@ -12,23 +12,23 @@ char **readWords(char *fileName, int *size_ptr);
 /**
  * Libera um array de palavras de tamanho size.
  * @param words: array de palavras.
- * @param size: tamanho do array.
+ * @param tamanho: tamanho do array.
 */
-void freeWords(char **words, int size);
+void freeWords(char **words, int tamanho);
 
 /**
  * Escreve o resultado do reconhecimento de palavras (funcao de reconhecimento deste codigo), no arquivo de nome informado.
- * @param result: resultados de reconhecimento (0 para nao aceito, 1 para aceito).
+ * @param resultado: resultados de reconhecimento (0 para nao aceito, 1 para aceito).
  * @param fileName: nome do arquivo que vai receber os resultados.
- * @param size: tamanho do array de resultados.
+ * @param tamanho: tamanho do array de resultados.
 */
-void writeReconhecerResult(int *result, char *fileName, int size);
+void writeReconhecerResult(int *resultado, char *fileName, int tamanho);
 
 /**
  * Aplica a funcao de transicao no AFD escolhido, lendo o simbolo a partir do estado informado, e retorna o estado resultante.
  * @param afd: afd alvo.
- * @param symbol: simbolo lido.
+ * @param simbolo: simbolo lido.
  * @param current_state: estado atual do AFD.
  * @return estado resultante da aplicacao da transicao.
 */
-char *transitionFunction(AFD *afd, char *symbol, char *current_state);
+char *transitionFunction(AFD *afd, char *simbolo, char *current_state);

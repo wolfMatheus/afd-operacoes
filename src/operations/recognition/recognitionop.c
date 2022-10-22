@@ -3,59 +3,59 @@
 #include <string.h>
 #include <stdlib.h>
 
-char *transitionFunction(AFD *afd, char *symbol, char *current_state)
+char *transitionFunction(AFD *afd, char *simbolo, char *estadoAtual)
 {
-  for (int i = 0; i < *afd->number_transitions; i++)
+  for (int i = 0; i < *afd->numero_transicoes; i++)
   {
-    Transition *transition = afd->transitions[i];
-    char *fromState = afd->states[*transition->from];
-    char *read = afd->alphabet[*transition->read];
-    if (!strcmp(current_state, fromState) && !strcmp(symbol, read))
+    Transition *transicao = afd->transicoes[i];
+    char *fromState = afd->estados[*transicao->from];
+    char *read = afd->alphabet[*transicao->read];
+    if (!strcmp(estadoAtual, fromState) && !strcmp(simbolo, read))
     {
-      return afd->states[*transition->to];
+      return afd->estados[*transicao->to];
     }
   }
 }
 
-char *extendedTransitionFunction(AFD *afd, char *word, char *current_state)
+char *extendedTransitionFunction(AFD *afd, char *word, char *estadoAtual)
 {
-  int size = strlen(word);
-  if (size == 0)
+  int tamanho = strlen(word);
+  if (tamanho == 0)
   {
-    return current_state;
+    return estadoAtual;
   }
   else
   {
-    char symbol[2] = {word[size - 1], '\0'};
+    char simbolo[2] = {word[tamanho - 1], '\0'};
     char *copy = copyString(word);
-    copy[size - 1] = '\0';
-    char *state = transitionFunction(afd, symbol, extendedTransitionFunction(afd, copy, current_state));
+    copy[tamanho - 1] = '\0';
+    char *estado= transitionFunction(afd, simbolo, extendedTransitionFunction(afd, copy, estadoAtual));
     free(copy);
-    return state;
+    return estado;
   }
 }
 
-int isFinalState(AFD *afd, char *state)
+int isFinalState(AFD *afd, char *estado)
 {
-  for (int i = 0; i < *afd->number_final_states; i++)
+  for (int i = 0; i < *afd->numeroEstadoFinal; i++)
   {
-    char *finalState = afd->states[afd->final_states[i]];
-    if (!strcmp(finalState, state))
+    char *estadoFinal = afd->estados[afd->final_states[i]];
+    if (!strcmp(estadoFinal, estado))
       return 1;
   }
   return 0;
 }
 
-int *reconhecer(AFD *afd, char **words, int size)
+int *reconhecer(AFD *afd, char **words, int tamanho)
 {
-  int *results = calloc(size, sizeof(int));
-  for (int i = 0; i < size; i++)
+  int *resultados = calloc(tamanho, sizeof(int));
+  for (int i = 0; i < tamanho; i++)
   {
-    char *initial_state = afd->states[*afd->initial_state];
+    char *estado_inicial = afd->estados[*afd->estado_inicial];
     char *wordCopy = copyString(words[i]);
-    char *state = extendedTransitionFunction(afd, wordCopy, initial_state);
-    results[i] = isFinalState(afd, state);
+    char *estado= extendedTransitionFunction(afd, wordCopy, estado_inicial);
+    resultados[i] = isFinalState(afd, estado);
     free(wordCopy);
   }
-  return results;
+  return resultados;
 }

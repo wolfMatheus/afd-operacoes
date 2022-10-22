@@ -27,9 +27,9 @@ CLI_Params *createCLIParams()
 int main(int argc, char *argv[])
 {
   CLI_Params *params = createCLIParams();
-  CLI_Result *result = readCLI(params, argc, argv);
+  CLI_Result *resultado = readCLI(params, argc, argv);
 
-  ApplicationContext *appContext = getAppContext(*result);
+  ApplicationContext *appContext = getAppContext(*resultado);
   if (appContext->err)
   {
     printf("Invalid input provided. Error log: %s\n", appContext->message);
@@ -46,6 +46,6 @@ int main(int argc, char *argv[])
   executeOperation(*appContext);
 
   freeAppContext(appContext);
-  freeCLI(result);
+  freeCLI(resultado);
   return 0;
 }

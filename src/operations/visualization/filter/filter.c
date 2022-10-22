@@ -4,28 +4,28 @@
 
 void filterTransitions(DOTFormat *dotFormat)
 {
-  int size = dotFormat->number_transitions;
-  int removed[size];
-  for (int i = 0; i < size; i++)
+  int tamanho = dotFormat->transicoes_numerica;
+  int removed[tamanho];
+  for (int i = 0; i < tamanho; i++)
   {
     removed[i] = 0;
   }
 
-  int indexes[size];
+  int indexes[tamanho];
   int indexesSize = 0;
   int newSize = 0;
-  DOTTransition *newTransitions[size];
-  for (int i = 0; i < size; i++)
+  DOTTransition *newTransitions[tamanho];
+  for (int i = 0; i < tamanho; i++)
   {
     if (removed[i])
       continue;
-    DOTTransition *outerTransition = dotFormat->transitions[i];
+    DOTTransition *outerTransition = dotFormat->transicoes[i];
     int labelSize = strlen(outerTransition->label + 1);
-    for (int j = 0; j < size; j++)
+    for (int j = 0; j < tamanho; j++)
     {
       if (i == j || removed[j])
         continue;
-      DOTTransition *innerTransition = dotFormat->transitions[j];
+      DOTTransition *innerTransition = dotFormat->transicoes[j];
       if (!strcmp(outerTransition->from, innerTransition->from) && !strcmp(outerTransition->to, innerTransition->to))
       {
         indexes[indexesSize] = j;
@@ -40,23 +40,23 @@ void filterTransitions(DOTFormat *dotFormat)
       char *newLabel = malloc(sizeof(char) * labelSize);
       sprintf(newLabel, "%s, ", outerTransition->label);
       free(outerTransition->label);
-      int currentSize = strlen(newLabel);
+      int tamanhoAtual = strlen(newLabel);
       for (int k = 0; k < indexesSize; k++)
       {
-        DOTTransition *transition = dotFormat->transitions[indexes[k]];
-        for (int j = 0; j < strlen(transition->label); j++, currentSize++)
+        DOTTransition *transition = dotFormat->transicoes[indexes[k]];
+        for (int j = 0; j < strlen(transition->label); j++, tamanhoAtual++)
         {
-          newLabel[currentSize] = transition->label[j];
+          newLabel[tamanhoAtual] = transition->label[j];
         }
         if (k != indexesSize - 1)
         {
-          newLabel[currentSize] = ',';
-          newLabel[currentSize + 1] = ' ';
-          currentSize += 2;
+          newLabel[tamanhoAtual] = ',';
+          newLabel[tamanhoAtual + 1] = ' ';
+          tamanhoAtual += 2;
         }
         freeDotTransition(transition);
       }
-      newLabel[currentSize] = '\0';
+      newLabel[tamanhoAtual] = '\0';
       outerTransition->label = newLabel;
       newTransitions[newSize] = outerTransition;
       newSize++;
@@ -75,7 +75,7 @@ void filterTransitions(DOTFormat *dotFormat)
   {
     newTransitionsPointer[i] = newTransitions[i];
   }
-  free(dotFormat->transitions);
-  dotFormat->transitions = newTransitionsPointer;
-  dotFormat->number_transitions = newSize;
+  free(dotFormat->transicoes);
+  dotFormat->transicoes = newTransitionsPointer;
+  dotFormat->transicoes_numerica = newSize;
 }

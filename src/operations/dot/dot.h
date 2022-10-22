@@ -18,10 +18,10 @@ typedef struct dotformat_transition_est
 typedef struct dotformat_est
 {
   char **double_circles;
-  int number_double_circles;
-  int number_transitions;
-  char *initial_state;
-  DOTTransition **transitions;
+  int numero_circulos_duplos;
+  int transicoes_numerica;
+  char *estado_inicial;
+  DOTTransition **transicoes;
 } DOTFormat;
 
 /**
@@ -35,13 +35,13 @@ DOTTransition *getDOTTransition(char *from, char *to, char *label);
 /**
  * Factory que retorna um DOTFormat a partir dos parametros recebidos.
  * @param double_circles: estados finais
- * @param number_double_circles: numero de estados finais
- * @param transitions: transicoes do AFD traduzidas para DOTTransitions.
- * @param number_transitions: numero de transicoes.
- * @param initial_state: estado inicial.
+ * @param numero_circulos_duplos: numero de estados finais
+ * @param transicoes: transicoes do AFD traduzidas para DOTTransitions.
+ * @param transicoes_numerica: numero de transicoes.
+ * @param estado_inicial: estado inicial.
  * @return instancia de DOTFormat correspondente.
 */
-DOTFormat *getDOTFormat(char **double_circles, int number_double_circles, DOTTransition **transitions, int number_transitions, char *initial_state);
+DOTFormat *getDOTFormat(char **double_circles, int numero_circulos_duplos, DOTTransition **transicoes, int transicoes_numerica, char *estado_inicial);
 
 /**
  * Libera a memoria alocada por uma DOTTransition.

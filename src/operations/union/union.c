@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int isAfdFinalState(AFD *afd, int index)
+int isAfdFinalState(AFD *afd, int indice)
 {
-  for (int i = 0; i < *afd->number_final_states; i++)
+  for (int i = 0; i < *afd->numero_estado_final; i++)
   {
-    if (index == afd->final_states[i])
+    if (indice == afd->estado_final[i])
       return 1;
   }
   return 0;
@@ -14,38 +14,38 @@ int isAfdFinalState(AFD *afd, int index)
 
 AFD *uniao(AFD *afd1, AFD *afd2)
 {
-  AFD *product = afdProduct(afd1, afd2);
-  int numberFinalStates = ((*afd1->number_final_states) * (*afd2->number_states)) +
-                          ((*afd2->number_final_states) * (*afd1->number_states)) - (*afd1->number_final_states * (*afd2->number_final_states));
-  product->final_states = malloc(sizeof(int) * numberFinalStates);
-  *product->number_final_states = numberFinalStates;
-  int currentIndex = 0;
-  for (int i = 0; i < *afd1->number_final_states; i++)
+  AFD *produto = afdProduct(afd1, afd2);
+  int numeroEstadoFinal = ((*afd1->numero_estado_final) * (*afd2->estadoNumerico)) +
+                          ((*afd2->numero_estado_final) * (*afd1->estadoNumerico)) - (*afd1->numero_estado_final * (*afd2->numero_estado_final));
+  produto->estado_final = malloc(sizeof(int) * numeroEstadoFinal);
+  *produto->numero_estado_final = numeroEstadoFinal;
+  int indiceAtual = 0;
+  for (int i = 0; i < *afd1->numero_estado_final; i++)
   {
-    int finalState = afd1->final_states[i];
-    int startingPoint = finalState * (*afd2->number_states);
-    for (int j = 0; j < *afd2->number_states; j++)
+    int estadoFinal = afd1->estado_final[i];
+    int startingPoint = estadoFinal * (*afd2->estadoNumerico);
+    for (int j = 0; j < *afd2->estadoNumerico; j++)
     {
-      int index = startingPoint + j;
-      product->final_states[currentIndex] = index;
-      currentIndex++;
+      int indice = startingPoint + j;
+      produto->estado_final[indiceAtual] = indice;
+      indiceAtual++;
     }
   }
 
-  for (int i = 0; i < *afd2->number_final_states; i++)
+  for (int i = 0; i < *afd2->numero_estado_final; i++)
   {
-    int finalState = afd2->final_states[i];
-    for (int j = 0; j < *afd1->number_states; j++)
+    int estadoFinal = afd2->estado_final[i];
+    for (int j = 0; j < *afd1->estadoNumerico; j++)
     {
-      int index = (j * (*afd2->number_states)) + finalState;
+      int indice = (j * (*afd2->estadoNumerico)) + estadoFinal;
       if (isAfdFinalState(afd1, j))
       {
         continue;
       }
-      product->final_states[currentIndex] = index;
-      currentIndex++;
+      produto->estado_final[indiceAtual] = indice;
+      indiceAtual++;
     }
   }
 
-  return product;
+  return produto;
 }

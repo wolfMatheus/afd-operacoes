@@ -4,7 +4,7 @@
 void executeOperation(ApplicationContext context)
 {
   AFD *afd = readAFD(context.input1);
-  AFD *result = NULL;
+  AFD *resultado = NULL;
   if (context.dot)
   {
     DOTFormat *dotFormat = visualizacao(afd);
@@ -13,41 +13,41 @@ void executeOperation(ApplicationContext context)
   }
   if (context.complemento)
   {
-    result = complemento(afd);
+    resultado = complemento(afd);
   }
   if (context.intersecao)
   {
     AFD *afd2 = readAFD(context.input2);
-    result = intersecao(afd, afd2);
+    resultado = intersecao(afd, afd2);
     freeAFD(afd2);
   }
   if (context.uniao)
   {
     AFD *afd2 = readAFD(context.input2);
-    result = uniao(afd, afd2);
+    resultado = uniao(afd, afd2);
     freeAFD(afd2);
   }
   if (context.minimizacao)
   {
-    result = minimizacao(afd);
+    resultado = minimizacao(afd);
   }
   if (context.reconhecer)
   {
-    int size;
-    char **words = readWords(context.input2, &size);
+    int tamanho;
+    char **words = readWords(context.input2, &tamanho);
     if (!words)
     {
       return;
     }
-    int *results = reconhecer(afd, words, size);
-    writeReconhecerResult(results, context.output, size);
-    free(results);
-    freeWords(words, size);
+    int *resultados = reconhecer(afd, words, tamanho);
+    writeReconhecerResult(resultados, context.output, tamanho);
+    free(resultados);
+    freeWords(words, tamanho);
   }
-  if (result)
+  if (resultado)
   {
-    writeAFD(*result, context.output);
-    freeAFD(result);
+    writeAFD(*resultado, context.output);
+    freeAFD(resultado);
   }
   freeAFD(afd);
 }

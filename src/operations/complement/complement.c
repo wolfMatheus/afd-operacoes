@@ -4,49 +4,49 @@
 
 AFD *complemento(AFD *afd)
 {
-  AFD *newAfd = getEmptyAFD();
-  newAfd->states = malloc((*afd->number_states) * sizeof(char *));
-  for (int i = 0; i < *afd->number_states; i++)
+  AFD *novoAfd = getEmptyAFD();
+  novoAfd->estado = malloc((*afd->estadoNumerico) * sizeof(char *));
+  for (int i = 0; i < *afd->estadoNumerico; i++)
   {
-    char *state = afd->states[i];
-    char *stateCopy = copyString(state);
-    newAfd->states[i] = stateCopy;
+    char *estado = afd->estado[i];
+    char *copiaDoEstado = copyString(estado);
+    novoAfd->estado[i] = copiaDoEstado;
   }
-  *newAfd->number_states = *afd->number_states;
+  *novoAfd->estadoNumerico = *afd->estadoNumerico;
 
-  newAfd->alphabet = malloc((*afd->number_symbols) * sizeof(char *));
-  for (int i = 0; i < *afd->number_symbols; i++)
+  novoAfd->alphabet = malloc((*afd->numero_simbolos) * sizeof(char *));
+  for (int i = 0; i < *afd->numero_simbolos; i++)
   {
-    char *symbol = afd->alphabet[i];
-    char *symbolCopy = copyString(symbol);
-    newAfd->alphabet[i] = symbolCopy;
+    char *simbolo = afd->alphabet[i];
+    char *copiaSimbolo = copyString(simbolo);
+    novoAfd->alphabet[i] = copiaSimbolo;
   }
-  *newAfd->number_symbols = *afd->number_symbols;
+  *novoAfd->numero_simbolos = *afd->numero_simbolos;
 
-  newAfd->transitions = malloc((*afd->number_transitions) * sizeof(Transition *));
-  for (int i = 0; i < *afd->number_transitions; i++)
+  novoAfd->transicoes = malloc((*afd->transicoes_numerica) * sizeof(transicao *));
+  for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
-    Transition *transition = afd->transitions[i];
-    Transition *newTransition = getEmptyTransition();
-    *newTransition->from = *transition->from;
-    *newTransition->to = *transition->to;
-    *newTransition->read = *transition->read;
-    newAfd->transitions[i] = newTransition;
+    Transition *transicao = afd->transicoes[i];
+    Transition *novaTransicao = getEmptyTransition();
+    *novaTransicao->from = *transicao->from;
+    *novaTransicao->to = *transicao->to;
+    *novaTransicao->read = *transicao->read;
+    novoAfd->transicoes[i] = novaTransicao;
   }
-  *newAfd->number_transitions = *afd->number_transitions;
-  *newAfd->initial_state = *afd->initial_state;
+  *novoAfd->transicoes_numerica = *afd->transicoes_numerica;
+  *novoAfd->estado_inicial = *afd->estado_inicial;
 
-  int numberFinalStates = (*afd->number_states) - (*afd->number_final_states);
-  newAfd->final_states = malloc(sizeof(int) * numberFinalStates);
-  *newAfd->number_final_states = numberFinalStates;
-  int currentFinalState = 0;
-  for (int i = 0; i < *afd->number_states; i++)
+  int numeroEstadoFinal = (*afd->estadoNumerico) - (*afd->numero_estado_final);
+  novoAfd->estado_final = malloc(sizeof(int) * numeroEstadoFinal);
+  *novoAfd->numero_estado_final = numeroEstadoFinal;
+  int estadoFinalAtual = 0;
+  for (int i = 0; i < *afd->estadoNumerico; i++)
   {
     int isFinal = 0;
-    for (int j = 0; j < *afd->number_final_states; j++)
+    for (int j = 0; j < *afd->numero_estado_final; j++)
     {
-      int finalState = afd->final_states[j];
-      if (i == finalState)
+      int estadoFinal = afd->estado_final[j];
+      if (i == estadoFinal)
       {
         isFinal = 1;
         break;
@@ -54,10 +54,10 @@ AFD *complemento(AFD *afd)
     }
     if (!isFinal)
     {
-      newAfd->final_states[currentFinalState] = i;
-      currentFinalState++;
+      novoAfd->estado_final[estadoFinalAtual] = i;
+      estadoFinalAtual++;
     }
   }
 
-  return newAfd;
+  return novoAfd;
 }

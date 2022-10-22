@@ -10,20 +10,20 @@ void writeDot(DOTFormat *dotFormat, char *fileName)
     return;
   }
   fprintf(file, "digraph finite_state_machine {\nrankdir=LR;\nsize=\"8,5\"\n");
-  if (dotFormat->number_double_circles)
+  if (dotFormat->numero_circulos_duplos)
   {
     fprintf(file, "node [shape = doublecircle]; ");
-    for (int i = 0; i < dotFormat->number_double_circles; i++)
+    for (int i = 0; i < dotFormat->numero_circulos_duplos; i++)
     {
       fprintf(file, "\"%s\" ", dotFormat->double_circles[i]);
     }
     fprintf(file, ";");
   }
   fprintf(file, "\nnode [shape = circle];\ninit [shape = point];\n");
-  fprintf(file, "init -> \"%s\";\n", dotFormat->initial_state);
-  for (int i = 0; i < dotFormat->number_transitions; i++)
+  fprintf(file, "init -> \"%s\";\n", dotFormat->estado_inicial);
+  for (int i = 0; i < dotFormat->transicoes_numerica; i++)
   {
-    DOTTransition *element = dotFormat->transitions[i];
+    DOTTransition *element = dotFormat->transicoes[i];
     fprintf(file, "\"%s\" -> \"%s\" [label = \"%s\"];\n", element->from, element->to, element->label);
   }
   fprintf(file, "}");
@@ -31,43 +31,43 @@ void writeDot(DOTFormat *dotFormat, char *fileName)
 
 DOTTransition *getDOTTransition(char *from, char *to, char *label)
 {
-  DOTTransition *transition = malloc(sizeof(DOTTransition));
-  transition->from = copyString(from);
-  transition->to = copyString(to);
-  transition->label = copyString(label);
-  return transition;
+  DOTTransition *transicao = malloc(sizeof(DOTTransition));
+  transicao->from = copyString(from);
+  transicao->to = copyString(to);
+  transicao->label = copyString(label);
+  return transicao;
 }
 
-DOTFormat *getDOTFormat(char **double_circles, int number_double_circles, DOTTransition **transitions, int number_transitions, char *initial_state)
+DOTFormat *getDOTFormat(char **double_circles, int numero_circulos_duplos, DOTTransition **transicoes, int transicoes_numerica, char *estado_inicial)
 {
   DOTFormat *dotFormat = malloc(sizeof(DOTFormat));
   dotFormat->double_circles = double_circles;
-  dotFormat->number_double_circles = number_double_circles;
-  dotFormat->transitions = transitions;
-  dotFormat->number_transitions = number_transitions;
-  dotFormat->initial_state = initial_state;
+  dotFormat->numero_circulos_duplos = numero_circulos_duplos;
+  dotFormat->transicoes = transicoes;
+  dotFormat->transicoes_numerica = transicoes_numerica;
+  dotFormat->estado_inicial = estado_inicial;
   return dotFormat;
 }
 
-void freeDotTransition(DOTTransition *transition)
+void freeDotTransition(DOTTransition *transicao)
 {
-  free(transition->from);
-  free(transition->to);
-  free(transition->label);
-  free(transition);
+  free(transicao->from);
+  free(transicao->to);
+  free(transicao->label);
+  free(transicao);
 }
 
 void freeDot(DOTFormat *dotFormat)
 {
-  for (int i = 0; i < dotFormat->number_transitions; i++)
+  for (int i = 0; i < dotFormat->transicoes_numerica; i++)
   {
-    freeDotTransition(dotFormat->transitions[i]);
+    freeDotTransition(dotFormat->transicoes[i]);
   }
-  for (int i = 0; i < dotFormat->number_double_circles; i++)
+  for (int i = 0; i < dotFormat->numero_circulos_duplos; i++)
   {
     free(dotFormat->double_circles[i]);
   }
   free(dotFormat->double_circles);
-  free(dotFormat->transitions);
+  free(dotFormat->transicoes);
   free(dotFormat);
 }

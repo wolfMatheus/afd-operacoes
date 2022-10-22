@@ -4,16 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int doubleTransitionFunction(AFD *productAfd, AFD *afd1, AFD *afd2, char *state1, char *state2, char *symbol)
+int doubleTransitionFunction(AFD *produtoAfd, AFD *afd1, AFD *afd2, char *state1, char *state2, char *simbolo)
 {
-  char *value1 = transitionFunction(afd1, symbol, state1);
-  char *value2 = transitionFunction(afd2, symbol, state2);
+  char *value1 = transitionFunction(afd1, simbolo, state1);
+  char *value2 = transitionFunction(afd2, simbolo, state2);
   char *concattedValue = concatWithComma(value1, value2);
 
   int foundIndex = -1;
-  for (int i = 0; i < *productAfd->number_states; i++)
+  for (int i = 0; i < *produtoAfd->estadoNumerico; i++)
   {
-    if (!strcmp(concattedValue, productAfd->states[i]))
+    if (!strcmp(concattedValue, produtoAfd->states[i]))
     {
       foundIndex = i;
       break;
@@ -25,56 +25,56 @@ int doubleTransitionFunction(AFD *productAfd, AFD *afd1, AFD *afd2, char *state1
 
 AFD *afdProduct(AFD *afd1, AFD *afd2)
 {
-  AFD *productAfd = getEmptyAFD();
-  *productAfd->number_symbols = *afd1->number_symbols;
-  productAfd->alphabet = malloc((*afd1->number_symbols) * sizeof(char *));
-  for (int i = 0; i < *afd1->number_symbols; i++)
+  AFD *produtoAfd = getEmptyAFD();
+  *produtoAfd->numero_simbolos = *afd1->numero_simbolos;
+  produtoAfd->alphabet = malloc((*afd1->numero_simbolos) * sizeof(char *));
+  for (int i = 0; i < *afd1->numero_simbolos; i++)
   {
-    char *symbol = afd1->alphabet[i];
-    char *newSymbol = copyString(symbol);
-    productAfd->alphabet[i] = newSymbol;
+    char *simbolo = afd1->alphabet[i];
+    char *newSymbol = copyString(simbolo);
+    produtoAfd->alphabet[i] = newSymbol;
   }
 
-  int numberOfStates = (*afd1->number_states) * (*afd2->number_states);
-  *productAfd->number_states = numberOfStates;
-  productAfd->states = malloc(sizeof(char *) * numberOfStates);
+  int numberOfStates = (*afd1->estadoNumerico) * (*afd2->estadoNumerico);
+  *produtoAfd->estadoNumerico = numberOfStates;
+  produtoAfd->states = malloc(sizeof(char *) * numberOfStates);
   int currentStateIndex = 0;
-  for (int i = 0; i < *afd1->number_states; i++)
+  for (int i = 0; i < *afd1->estadoNumerico; i++)
   {
     char *state1 = afd1->states[i];
-    for (int j = 0; j < *afd2->number_states; j++)
+    for (int j = 0; j < *afd2->estadoNumerico; j++)
     {
       char *state2 = afd2->states[j];
       char *productState = concatWithComma(state1, state2);
-      productAfd->states[currentStateIndex] = productState;
-      if (i == *afd1->initial_state && j == *afd2->initial_state)
+      produtoAfd->states[currentStateIndex] = productState;
+      if (i == *afd1->estado_inicial && j == *afd2->estado_inicial)
       {
-        *productAfd->initial_state = currentStateIndex;
+        *produtoAfd->estado_inicial = currentStateIndex;
       }
       currentStateIndex++;
     }
   }
 
-  *productAfd->number_transitions = numberOfStates * (*productAfd->number_symbols);
-  productAfd->transitions = malloc(sizeof(Transition *) * (*productAfd->number_transitions));
-  int currentTransitionIndex = 0;
-  for (int i = 0; i < *productAfd->number_states; i++)
+  *produtoAfd->transicoes_numerica = numberOfStates * (*produtoAfd->numero_simbolos);
+  produtoAfd->transicoes = malloc(sizeof(Transition *) * (*produtoAfd->transicoes_numerica));
+  int indiceTransicaoAtual = 0;
+  for (int i = 0; i < *produtoAfd->estadoNumerico; i++)
   {
-    char *state = productAfd->states[i];
+    char *estado= produtoAfd->states[i];
     char **splitted = splitByComma(state);
-    for (int j = 0; j < *productAfd->number_symbols; j++)
+    for (int j = 0; j < *produtoAfd->numero_simbolos; j++)
     {
-      char *symbol = productAfd->alphabet[j];
-      int result = doubleTransitionFunction(productAfd, afd1, afd2, splitted[0], splitted[1], symbol);
-      Transition *transition = getEmptyTransition();
-      *transition->from = i;
-      *transition->to = result;
-      *transition->read = j;
-      productAfd->transitions[currentTransitionIndex] = transition;
-      currentTransitionIndex++;
+      char *simbolo = produtoAfd->alphabet[j];
+      int resultado = doubleTransitionFunction(produtoAfd, afd1, afd2, splitted[0], splitted[1], simbolo);
+      Transition *transicao = getEmptyTransition();
+      *transicao->from = i;
+      *transicao->to = resultado;
+      *transicao->read = j;
+      produtoAfd->transicoes[indiceTransicaoAtual] = transition;
+      indiceTransicaoAtual++;
     }
     freeSplit(splitted);
   }
 
-  return productAfd;
+  return produtoAfd;
 }

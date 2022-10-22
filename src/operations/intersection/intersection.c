@@ -5,23 +5,23 @@
 
 AFD *intersecao(AFD *afd1, AFD *afd2)
 {
-  AFD *product = afdProduct(afd1, afd2);
-  int numberFinalStates = (*afd1->number_final_states) * (*afd2->number_final_states);
-  product->final_states = malloc(sizeof(int) * numberFinalStates);
-  *product->number_final_states = numberFinalStates;
-  int currentIndex = 0;
-  int n2 = *afd2->number_final_states;
-  for (int i = 0; i < *afd1->number_final_states; i++)
+  AFD *produto = afdProduct(afd1, afd2);
+  int numeroEstadoFinal = (*afd1->numero_estado_final) * (*afd2->numero_estado_final);
+  produto->estado_final = malloc(sizeof(int) * numeroEstadoFinal);
+  *produto->numero_estado_final = numeroEstadoFinal;
+  int indiceAtual = 0;
+  int n2 = *afd2->numero_estado_final;
+  for (int i = 0; i < *afd1->numero_estado_final; i++)
   {
-    int index1 = afd1->final_states[i];
-    for (int j = 0; j < *afd2->number_final_states; j++)
+    int indice1 = afd1->estado_final[i];
+    for (int j = 0; j < *afd2->numero_estado_final; j++)
     {
-      int index2 = afd2->final_states[j];
-      int productIndex = (index1 * n2) + index2;
-      product->final_states[currentIndex] = productIndex;
-      currentIndex++;
+      int indice2 = afd2->estado_final[j];
+      int indiceProduto = (indice1 * n2) + indice2;
+      produto->estado_final[indiceAtual] = indiceProduto;
+      indiceAtual++;
     }
   }
 
-  return product;
+  return produto;
 }

@@ -14,32 +14,32 @@ char *concatWithComma(char *str1, char *str2)
   int len1 = strlen(str1);
   int len2 = strlen(str2);
   char *newStr = malloc(sizeof(char) * (len1 + len2 + 2));
-  int currentIndex = 0;
+  int indiceAtual = 0;
   for (int i = 0; i < len1; i++)
   {
-    newStr[currentIndex] = str1[i];
-    currentIndex++;
+    newStr[indiceAtual] = str1[i];
+    indiceAtual++;
   }
-  newStr[currentIndex] = '_';
-  currentIndex++;
+  newStr[indiceAtual] = '_';
+  indiceAtual++;
   for (int i = 0; i < len2; i++)
   {
-    newStr[currentIndex] = str2[i];
-    currentIndex++;
+    newStr[indiceAtual] = str2[i];
+    indiceAtual++;
   }
-  newStr[currentIndex] = '\0';
+  newStr[indiceAtual] = '\0';
   return newStr;
 }
 
 char **splitByComma(char *str)
 {
-  int size = strlen(str);
+  int tamanho = strlen(str);
   int wordLength = 0;
   char **words = malloc(sizeof(char *) * 2);
-  for (int i = 0; i < size; i++)
+  for (int i = 0; i < tamanho; i++)
   {
     wordLength++;
-    int secondSize = size - wordLength + 1;
+    int secondSize = tamanho - wordLength + 1;
     if (str[i] == '_')
     {
       words[0] = malloc(sizeof(char) * wordLength);

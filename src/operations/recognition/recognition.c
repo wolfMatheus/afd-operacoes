@@ -7,46 +7,46 @@ char **readWords(char *fileName, int *size_ptr)
   FILE *file = fopen(fileName, "r");
   if (!file)
     return NULL;
-  int size = 0;
+  int tamanho = 0;
   char **words = NULL;
   char buffer[100];
   while (fscanf(file, "%s\n", buffer) != EOF)
   {
     char *word = copyString(buffer);
-    size++;
+    tamanho++;
     if (words)
     {
-      words = realloc(words, sizeof(char *) * size);
+      words = realloc(words, sizeof(char *) * tamanho);
     }
     else
     {
       words = malloc(sizeof(char *));
     }
-    words[size - 1] = word;
+    words[tamanho - 1] = word;
   }
-  *size_ptr = size;
+  *size_ptr = tamanho;
   fclose(file);
   return words;
 }
 
-void freeWords(char **words, int size)
+void freeWords(char **words, int tamanho)
 {
-  for (int i = 0; i < size; i++)
+  for (int i = 0; i < tamanho; i++)
   {
     free(words[i]);
   }
   free(words);
 }
 
-void writeReconhecerResult(int *result, char *fileName, int size)
+void writeReconhecerResult(int *resultado, char *fileName, int tamanho)
 {
 
   FILE *file = fopen(fileName, "w");
   if (!file)
     return;
-  for (int i = 0; i < size; i++)
+  for (int i = 0; i < tamanho; i++)
   {
-    fprintf(file, "%d\n", result[i]);
+    fprintf(file, "%d\n", resultado[i]);
   }
   fclose(file);
 }

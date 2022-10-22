@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int isContained(int *values, int value, int size)
+int isContained(int *values, int value, int tamanho)
 {
-  for (int i = 0; i < size; i++)
+  for (int i = 0; i < tamanho; i++)
   {
     if (value == values[i])
     {
@@ -16,13 +16,13 @@ int isContained(int *values, int value, int size)
   return 0;
 }
 
-int getEquivalenceGroup(int **groups, int groupsSize, int *sizes, int value)
+int getEquivalenceGroup(int **grupos, int tamanhoGrupos, int *tamanhos, int value)
 {
-  for (int i = 0; i < groupsSize; i++)
+  for (int i = 0; i < tamanhoGrupos; i++)
   {
-    for (int j = 0; j < sizes[i]; j++)
+    for (int j = 0; j < tamanhos[i]; j++)
     {
-      if (groups[i][j] == value)
+      if (grupos[i][j] == value)
       {
         return i;
       }
@@ -31,258 +31,258 @@ int getEquivalenceGroup(int **groups, int groupsSize, int *sizes, int value)
   return -1;
 }
 
-char *mergeStates(AFD *afd, int *states, int size)
+char *mergeStates(AFD *afd, int *estados, int tamanho)
 {
-  int numberSeparators = size - 1;
-  int currentSize = numberSeparators + 1;
-  char *newState = malloc(sizeof(char) * currentSize);
-  int currentIndex = 0;
-  for (int i = 0; i < size; i++)
+  int separadoresDeNumeros = tamanho - 1;
+  int tamanhoAtual = separadoresDeNumeros + 1;
+  char *novoEstado = malloc(sizeof(char) * tamanhoAtual);
+  int indiceAtual = 0;
+  for (int i = 0; i < tamanho; i++)
   {
-    int stateIndex = states[i];
-    char *state = afd->states[stateIndex];
-    int stateLength = strlen(state);
-    currentSize += stateLength;
-    newState = realloc(newState, sizeof(char) * currentSize);
-    for (int j = 0; j < stateLength; j++)
+    int indiceEstado = estados[i];
+    char *estado= afd->estados[indiceEstado];
+    int comprimentoDoEstado = strlen(estado);
+    tamanhoAtual += comprimentoDoEstado;
+    novoEstado = realloc(novoEstado, sizeof(char) * tamanhoAtual);
+    for (int j = 0; j < comprimentoDoEstado; j++)
     {
-      newState[currentIndex] = state[j];
-      currentIndex++;
+      novoEstado[indiceAtual] = estado[j];
+      indiceAtual++;
     }
-    if (i != size - 1)
+    if (i != tamanho - 1)
     {
-      newState[currentIndex] = '_';
-      currentIndex++;
+      novoEstado[indiceAtual] = '_';
+      indiceAtual++;
     }
   }
-  newState[currentIndex] = '\0';
-  return newState;
+  novoEstado[indiceAtual] = '\0';
+  return novoEstado;
 }
 
 Transition *getTransitionFromIndexes(AFD *afd, int from, int read)
 {
-  for (int i = 0; i < *afd->number_transitions; i++)
+  for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
-    if (*afd->transitions[i]->from == from && *afd->transitions[i]->read == read)
+    if (*afd->transicoes[i]->from == from && *afd->transicoes[i]->read == read)
     {
-      return afd->transitions[i];
+      return afd->transicoes[i];
     }
   }
   return NULL;
 }
 
-void updateReachableList(AFD *afd, int **reachables, int *reachableSize, int element)
+void updateReachableList(AFD *afd, int **alcancaveis, int *tamanhoAlcancavel, int elemento)
 {
-  for (int i = 0; i < *afd->number_symbols; i++)
+  for (int i = 0; i < *afd->numero_simbolos; i++)
   {
-    Transition *transition = getTransitionFromIndexes(afd, element, i);
-    if (!isContained(*reachables, *transition->to, *reachableSize))
+    Transition *transicao = getTransitionFromIndexes(afd, elemento, i);
+    if (!isContained(*alcancaveis, *transicao->to, *tamanhoAlcancavel))
     {
-      (*reachableSize)++;
-      *reachables = realloc(*reachables, *reachableSize);
-      (*reachables)[(*reachableSize) - 1] = *transition->to;
-      updateReachableList(afd, reachables, reachableSize, *transition->to);
+      (*tamanhoAlcancavel)++;
+      *alcancaveis = realloc(*alcancaveis, *tamanhoAlcancavel);
+      (*alcancaveis)[(*tamanhoAlcancavel) - 1] = *transicao->to;
+      updateReachableList(afd, alcancaveis, tamanhoAlcancavel, *transicao->to);
     }
   }
 }
 
 AFD *copyAFDWithoutUnreachableStates(AFD *afd)
 {
-  AFD *newAfd = getEmptyAFD();
-  int *reachables = malloc(sizeof(int));
-  int reachableSize = 1;
-  reachables[0] = *afd->initial_state;
-  updateReachableList(afd, &reachables, &reachableSize, *afd->initial_state);
+  AFD *novoAfd = getEmptyAFD();
+  int *alcancaveis = malloc(sizeof(int));
+  int tamanhoAlcancavel = 1;
+  alcancaveis[0] = *afd->estado_inicial;
+  updateReachableList(afd, &alcancaveis, &tamanhoAlcancavel, *afd->estado_inicial);
 
-  *newAfd->number_states = reachableSize;
-  newAfd->states = malloc(sizeof(char *) * reachableSize);
-  newAfd->final_states = malloc(sizeof(int));
-  int finalStateAllocSize = 1;
-  int finalStates = 0;
-  for (int i = 0; i < reachableSize; i++)
+  *novoAfd->estadoNumerico = tamanhoAlcancavel;
+  novoAfd->estados= malloc(sizeof(char *) * tamanhoAlcancavel);
+  novoAfd->estado_final = malloc(sizeof(int));
+  int tamanhoFinalDeAlocacaoEstado = 1;
+  int estadosFinais = 0;
+  for (int i = 0; i < tamanhoAlcancavel; i++)
   {
-    char *state = afd->states[reachables[i]];
-    newAfd->states[i] = copyString(state);
-    if (isContained(afd->final_states, reachables[i], *afd->number_final_states))
+    char *estado= afd->estados[alcancaveis[i]];
+    novoAfd->estados[i] = copyString(estado);
+    if (isContained(afd->estado_final, alcancaveis[i], *afd->numero_estado_final))
     {
-      if (finalStateAllocSize == finalStates)
+      if (tamanhoFinalDeAlocacaoEstado == estadosFinais)
       {
-        finalStateAllocSize++;
-        newAfd->final_states = realloc(newAfd->final_states, sizeof(int) * finalStateAllocSize);
+        tamanhoFinalDeAlocacaoEstado++;
+        novoAfd->estado_final = realloc(novoAfd->estado_final, sizeof(int) * tamanhoFinalDeAlocacaoEstado);
       }
-      newAfd->final_states[finalStates] = i;
-      finalStates++;
+      novoAfd->estado_final[estadosFinais] = i;
+      estadosFinais++;
     }
   }
-  *newAfd->number_final_states = finalStates;
+  *novoAfd->numero_estado_final = estadosFinais;
 
-  int numberTransitions = 0;
-  int allocSize = 1;
-  newAfd->transitions = malloc(sizeof(Transition *));
-  for (int i = 0; i < reachableSize; i++)
+  int numeroTransicoes = 0;
+  int alocarTamanho = 1;
+  novoAfd->transicoes = malloc(sizeof(Transition *));
+  for (int i = 0; i < tamanhoAlcancavel; i++)
   {
-    int element = reachables[i];
-    for (int j = 0; j < *afd->number_transitions; j++)
+    int elemento= reachables[i];
+    for (int j = 0; j < *afd->transicoes_numerica; j++)
     {
-      Transition *transition = afd->transitions[j];
-      if (*transition->to == element)
+      Transition *transicao = afd->transicoes[j];
+      if (*transicao->to == elemento)
       {
-        Transition *newTransition = getEmptyTransition();
-        char *state = afd->states[*transition->from];
-        int position = getStatePosition(*newAfd, state);
-        if (position == -1)
+        Transition *novaTransicao = getEmptyTransition();
+        char *estado= afd->estados[*transicao->from];
+        int posicao = getStatePosition(*novoAfd, estado);
+        if (posicao == -1)
         {
           continue;
         }
-        *newTransition->from = position;
-        *newTransition->read = *transition->read;
-        *newTransition->to = i;
-        if (allocSize == numberTransitions)
+        *novaTransicao->from = posicao;
+        *novaTransicao->read = *transicao->read;
+        *novaTransicao->to = i;
+        if (alocarTamanho == numeroTransicoes)
         {
-          allocSize++;
-          newAfd->transitions = realloc(newAfd->transitions, sizeof(Transition *) * allocSize);
+          alocarTamanho++;
+          novoAfd->transicoes = realloc(novoAfd->transicoes, sizeof(Transition *) * alocarTamanho);
         }
-        newAfd->transitions[numberTransitions] = newTransition;
-        numberTransitions++;
+        novoAfd->transicoes[numeroTransicoes] = novaTransicao;
+        numeroTransicoes++;
       }
     }
   }
-  *newAfd->number_transitions = numberTransitions;
+  *novoAfd->transicoes_numerica = numeroTransicoes;
 
-  *newAfd->number_symbols = *afd->number_symbols;
-  newAfd->alphabet = malloc(sizeof(char *) * (*newAfd->number_symbols));
-  for (int i = 0; i < *newAfd->number_symbols; i++)
+  *novoAfd->numero_simbolos = *afd->numero_simbolos;
+  novoAfd->alphabet = malloc(sizeof(char *) * (*novoAfd->numero_simbolos));
+  for (int i = 0; i < *novoAfd->numero_simbolos; i++)
   {
-    newAfd->alphabet[i] = copyString(afd->alphabet[i]);
+    novoAfd->alphabet[i] = copyString(afd->alphabet[i]);
   }
-  *newAfd->initial_state = *afd->initial_state;
+  *novoAfd->estado_inicial = *afd->estado_inicial;
 
-  return newAfd;
+  return novoAfd;
 }
 
 AFD *minimizacao(AFD *initialAfd)
 {
   AFD *afd = copyAFDWithoutUnreachableStates(initialAfd);
 
-  for (int i = 0; i < *afd->number_transitions; i++)
+  for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
-    Transition *transition = afd->transitions[i];
+    Transition *transicao = afd->transicoes[i];
   }
 
-  int **equivalenceGroups = malloc(sizeof(int *) * 2);
-  int *sizes = malloc(sizeof(int) * 2);
-  sizes[0] = *afd->number_final_states;
-  sizes[1] = *afd->number_states - (*afd->number_final_states);
-  int totalGroups = !sizes[0] || !sizes[1] ? 1 : 2;
-  equivalenceGroups[0] = sizes[0] ? malloc(sizeof(int) * sizes[0]) : NULL;
-  equivalenceGroups[1] = sizes[1] ? malloc(sizeof(int) * sizes[1]) : NULL;
+  int **grupoEquivalencia = malloc(sizeof(int *) * 2);
+  int *tamanhos = malloc(sizeof(int) * 2);
+  tamanhos[0] = *afd->numero_estado_final;
+  tamanhos[1] = *afd->estadoNumerico - (*afd->numero_estado_final);
+  int totalDeGrupos = !tamanhos[0] || !tamanhos[1] ? 1 : 2;
+  grupoEquivalencia[0] = tamanhos[0] ? malloc(sizeof(int) * tamanhos[0]) : NULL;
+  grupoEquivalencia[1] = tamanhos[1] ? malloc(sizeof(int) * tamanhos[1]) : NULL;
 
-  if (!sizes[0])
+  if (!tamanhos[0])
   {
-    sizes[0] = sizes[1];
-    equivalenceGroups[0] = equivalenceGroups[1];
+    tamanhos[0] = tamanhos[1];
+    grupoEquivalencia[0] = grupoEquivalencia[1];
   }
 
-  for (int i = 0; i < *afd->number_final_states; i++)
+  for (int i = 0; i < *afd->numero_estado_final; i++)
   {
-    equivalenceGroups[0][i] = afd->final_states[i];
+    grupoEquivalencia[0][i] = afd->estado_final[i];
   }
-  int currentStartStateIndex = 0;
-  for (int i = 0; i < *afd->number_states; i++)
+  int indiceEstadoInicialAtual = 0;
+  for (int i = 0; i < *afd->estadoNumerico; i++)
   {
-    if (isContained(afd->final_states, i, *afd->number_final_states))
+    if (isContained(afd->estado_final, i, *afd->numero_estado_final))
     {
       continue;
     }
-    equivalenceGroups[1][currentStartStateIndex] = i;
-    currentStartStateIndex++;
+    grupoEquivalencia[1][indiceEstadoInicialAtual] = i;
+    indiceEstadoInicialAtual++;
   }
   int changed = 0;
   do
   {
     changed = 0;
-    for (int i = 0; i < totalGroups; i++)
+    for (int i = 0; i < totalDeGrupos; i++)
     {
       int *x = NULL;
-      int xSize = 0;
-      int element = equivalenceGroups[i][0];
-      int *elementEquivalenceGroups = malloc(sizeof(int) * (*afd->number_symbols));
-      for (int k = 0; k < *afd->number_symbols; k++)
+      int xTamanho = 0;
+      int elemento= grupoEquivalencia[i][0];
+      int *grupoEquivalenciaDeElementos = malloc(sizeof(int) * (*afd->numero_simbolos));
+      for (int k = 0; k < *afd->numero_simbolos; k++)
       {
-        char *state = transitionFunction(afd, afd->alphabet[k], afd->states[element]);
-        int stateIndex = getStatePosition(*afd, state);
-        int group = getEquivalenceGroup(equivalenceGroups, totalGroups, sizes, stateIndex);
-        elementEquivalenceGroups[k] = group;
+        char *estado= transitionFunction(afd, afd->alphabet[k], afd->estados[elemento]);
+        int indiceEstado = getStatePosition(*afd, estado);
+        int group = getEquivalenceGroup(grupoEquivalencia, totalDeGrupos, tamanhos, indiceEstado);
+        grupoEquivalenciaDeElementos[k] = group;
       }
 
-      for (int j = 0; j < sizes[i]; j++)
+      for (int j = 0; j < tamanhos[i]; j++)
       {
-        for (int l = 0; l < *afd->number_symbols; l++)
+        for (int l = 0; l < *afd->numero_simbolos; l++)
         {
-          char *state = transitionFunction(afd, afd->alphabet[l], afd->states[equivalenceGroups[i][j]]);
-          int stateIndex = getStatePosition(*afd, state);
-          int group = getEquivalenceGroup(equivalenceGroups, totalGroups, sizes, stateIndex);
-          if (group != elementEquivalenceGroups[l])
+          char *estado= transitionFunction(afd, afd->alphabet[l], afd->estados[grupoEquivalencia[i][j]]);
+          int indiceEstado = getStatePosition(*afd, estado);
+          int group = getEquivalenceGroup(grupoEquivalencia, totalDeGrupos, tamanhos, indiceEstado);
+          if (group != grupoEquivalenciaDeElementos[l])
           {
-            xSize++;
-            if (!xSize)
+            xTamanho++;
+            if (!xTamanho)
             {
               x = malloc(sizeof(int));
             }
             else
             {
-              x = realloc(x, sizeof(int) * xSize);
+              x = realloc(x, sizeof(int) * xTamanho);
             }
-            x[xSize - 1] = equivalenceGroups[i][j];
-            for (int k = j; k < sizes[i] - 1; k++)
+            x[xTamanho - 1] = grupoEquivalencia[i][j];
+            for (int k = j; k < tamanhos[i] - 1; k++)
             {
-              equivalenceGroups[i][k] = equivalenceGroups[i][k + 1];
+              grupoEquivalencia[i][k] = grupoEquivalencia[i][k + 1];
             }
-            sizes[i]--;
+            tamanhos[i]--;
             break;
           }
         }
       }
-      if (xSize)
+      if (xTamanho)
       {
         changed = 1;
-        totalGroups++;
-        equivalenceGroups = realloc(equivalenceGroups, sizeof(int *) * totalGroups);
-        equivalenceGroups[totalGroups - 1] = x;
-        sizes = realloc(sizes, sizeof(int) * totalGroups);
-        sizes[totalGroups - 1] = xSize;
+        totalDeGrupos++;
+        grupoEquivalencia = realloc(grupoEquivalencia, sizeof(int *) * totalDeGrupos);
+        grupoEquivalencia[totalDeGrupos - 1] = x;
+        tamanhos = realloc(tamanhos, sizeof(int) * totalDeGrupos);
+        tamanhos[totalDeGrupos - 1] = xTamanho;
       }
     }
   } while (changed);
 
-  AFD *newAfd = getEmptyAFD();
-  *newAfd->number_states = totalGroups;
-  newAfd->states = malloc(sizeof(char *) * totalGroups);
-  for (int i = 0; i < totalGroups; i++)
+  AFD *novoAfd = getEmptyAFD();
+  *novoAfd->estadoNumerico = totalDeGrupos;
+  novoAfd->estados= malloc(sizeof(char *) * totalDeGrupos);
+  for (int i = 0; i < totalDeGrupos; i++)
   {
-    newAfd->states[i] = mergeStates(afd, equivalenceGroups[i], sizes[i]);
+    novoAfd->estados[i] = mergeStates(afd, grupoEquivalencia[i], tamanhos[i]);
   }
-  *newAfd->number_symbols = *afd->number_symbols;
-  newAfd->alphabet = malloc(sizeof(char *) * (*afd->number_symbols));
-  for (int i = 0; i < *afd->number_symbols; i++)
+  *novoAfd->numero_simbolos = *afd->numero_simbolos;
+  novoAfd->alphabet = malloc(sizeof(char *) * (*afd->numero_simbolos));
+  for (int i = 0; i < *afd->numero_simbolos; i++)
   {
-    newAfd->alphabet[i] = copyString(afd->alphabet[i]);
+    novoAfd->alphabet[i] = copyString(afd->alphabet[i]);
   }
 
-  int initialState = getEquivalenceGroup(equivalenceGroups, totalGroups, sizes, *afd->initial_state);
-  *newAfd->initial_state = initialState;
+  int estadoInicial = getEquivalenceGroup(grupoEquivalencia, totalDeGrupos, tamanhos, *afd->estado_inicial);
+  *novoAfd->estado_inicial = estadoInicial;
 
-  newAfd->final_states = malloc(sizeof(int));
-  int allocatedSize = 1;
-  int totalFinalStates = 0;
+  novoAfd->estado_final = malloc(sizeof(int));
+  int tamanhoAlocado = 1;
+  int estadosFinaisTotais = 0;
 
-  for (int i = 0; i < totalGroups; i++)
+  for (int i = 0; i < totalDeGrupos; i++)
   {
     int contained = 1;
-    for (int j = 0; j < sizes[i]; j++)
+    for (int j = 0; j < tamanhos[i]; j++)
     {
-      int element = equivalenceGroups[i][j];
-      if (!isContained(afd->final_states, element, *afd->number_final_states))
+      int elemento= grupoEquivalencia[i][j];
+      if (!isContained(afd->estado_final, elemento, *afd->numero_estado_final))
       {
         contained = 0;
         break;
@@ -290,53 +290,53 @@ AFD *minimizacao(AFD *initialAfd)
     }
     if (contained)
     {
-      if (totalFinalStates == allocatedSize)
+      if (estadosFinaisTotais == tamanhoAlocado)
       {
-        allocatedSize++;
-        newAfd->final_states = realloc(newAfd->final_states, sizeof(int) * allocatedSize);
+        tamanhoAlocado++;
+        novoAfd->estado_final = realloc(novoAfd->estado_final, sizeof(int) * tamanhoAlocado);
       }
-      newAfd->final_states[totalFinalStates] = i;
-      totalFinalStates++;
+      novoAfd->estado_final[estadosFinaisTotais] = i;
+      estadosFinaisTotais++;
     }
   }
-  *newAfd->number_final_states = totalFinalStates;
+  *novoAfd->numero_estado_final = estadosFinaisTotais;
 
-  int numberTransitions = *newAfd->number_states * (*afd->number_symbols);
-  newAfd->transitions = malloc(sizeof(Transition *) * numberTransitions);
-  *newAfd->number_transitions = numberTransitions;
-  int currentTransitionIndex = 0;
-  for (int i = 0; i < totalGroups; i++)
+  int numeroTransicoes = *novoAfd->estadoNumerico * (*afd->numero_simbolos);
+  novoAfd->transicoes = malloc(sizeof(Transition *) * numeroTransicoes);
+  *novoAfd->transicoes_numerica = numeroTransicoes;
+  int indiceTransicaoAtual = 0;
+  for (int i = 0; i < totalDeGrupos; i++)
   {
-    if (!sizes[i])
+    if (!tamanhos[i])
     {
       continue;
     }
-    for (int j = 0; j < *afd->number_symbols; j++)
+    for (int j = 0; j < *afd->numero_simbolos; j++)
     {
-      Transition *transition = getEmptyTransition();
-      *transition->from = i;
-      char *state = transitionFunction(afd, afd->alphabet[j], afd->states[equivalenceGroups[i][0]]);
-      int stateIndex = getStatePosition(*afd, state);
-      int group = getEquivalenceGroup(equivalenceGroups, totalGroups, sizes, stateIndex);
-      *transition->to = group;
-      *transition->read = j;
-      newAfd->transitions[currentTransitionIndex] = transition;
-      currentTransitionIndex++;
+      Transition *transicao = getEmptyTransition();
+      *transicao->from = i;
+      char *estado= transitionFunction(afd, afd->alphabet[j], afd->estados[grupoEquivalencia[i][0]]);
+      int indiceEstado = getStatePosition(*afd, estado);
+      int group = getEquivalenceGroup(grupoEquivalencia, totalDeGrupos, tamanhos, indiceEstado);
+      *transicao->to = group;
+      *transicao->read = j;
+      novoAfd->transicoes[indiceTransicaoAtual] = transicao;
+      indiceTransicaoAtual++;
     }
   }
 
-  for (int i = 0; i < totalGroups; i++)
+  for (int i = 0; i < totalDeGrupos; i++)
   {
-    free(equivalenceGroups[i]);
+    free(grupoEquivalencia[i]);
   }
-  free(equivalenceGroups);
-  free(sizes);
+  free(grupoEquivalencia);
+  free(tamanhos);
 
   freeAFD(afd);
-  for (int i = 0; i < *newAfd->number_transitions; i++)
+  for (int i = 0; i < *novoAfd->transicoes_numerica; i++)
   {
-    Transition *transition = newAfd->transitions[i];
+    Transition *transicao = novoAfd->transicoes[i];
   }
 
-  return newAfd;
+  return novoAfd;
 }

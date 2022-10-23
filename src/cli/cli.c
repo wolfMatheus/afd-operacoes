@@ -31,7 +31,7 @@ CLI_Item *searchItem(CLI_Params params, char *value)
   return NULL;
 }
 
-void registerParam(CLI_Params *params, char *name, int number_values)
+void registraParametros(CLI_Params *params, char *name, int number_values)
 {
   if (params->items_size == params->tamanho)
   {

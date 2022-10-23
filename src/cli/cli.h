@@ -3,7 +3,7 @@
 /**
  * Representa um campo que se quer registrar na CLI. O nome precisa ser unico, number_values representa 
  * o numero esperado de argumentos quando o comando for usado, e position eh um campo de controle interno.
-*/
+*/  
 typedef struct cli_item
 {
   char *name;
@@ -106,7 +106,7 @@ void freeLinkedList(CLI_Value *head);
  * @param name: nome do parametro a ser adicionado.
  * @param number_values: numero de valores esperados para o parametro.
 */
-void registerParam(CLI_Params *params, char *name, int number_values);
+void registraParametros(CLI_Params *params, char *name, int number_values);
 
 /**
  * Libera a memoria alocada para um resultado de CLI.

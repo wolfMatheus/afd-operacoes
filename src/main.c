@@ -9,13 +9,13 @@ CLI_Params *criaCLIParams()
 {
   CLI_Params *parametros = getParams(10); 
 
-  registerParam(parametros, DOT, 1);
-  registerParam(parametros, OUTPUT, 1);
-  registerParam(parametros, COMPLEMENTO, 1);
-  registerParam(parametros, INTERSECAO, 2);
-  registerParam(parametros, UNIAO, 2);
-  registerParam(parametros, MINIMIZACAO, 1);
-  registerParam(parametros, RECONHECER, 2);
+  registraParametros(parametros, DOT, 1);
+  registraParametros(parametros, OUTPUT, 1);
+  registraParametros(parametros, COMPLEMENTO, 1);
+  registraParametros(parametros, INTERSECAO, 2);
+  registraParametros(parametros, UNIAO, 2);
+  registraParametros(parametros, MINIMIZACAO, 1);
+  registraParametros(parametros, RECONHECER, 2);
 
   return parametros;
 }
@@ -29,23 +29,23 @@ int main(int argc, char *argv[])
   CLI_Params *parametros = criaCLIParams();
   CLI_Result *resultado = readCLI(parametros, argc, argv);
 
-  ApplicationContext *appContext = getAppContext(*resultado);
-  if (appContext->err)
+  ApplicationContext *appValidacao = getAppContext(*resultado);
+  if (appValidacao->err)
   {
-    printf("Invalid input provided. Error log: %s\n", appContext->message);
+    printf("Invalid input provided. Error log: %s\n", appValidacao->message);
     return 1;
   }
 
-  validateAppContext(appContext);
-  if (appContext->err)
+  validateAppContext(appValidacao);
+  if (appValidacao->err)
   {
-    printf("Invalid input provided. Error log: %s\n", appContext->message);
+    printf("Invalid input provided. Error log: %s\n", appValidacao->message);
     return 1;
   }
 
-  executeOperation(*appContext);
+  executeOperation(*appValidacao);
 
-  freeAppContext(appContext);
+  freeAppContext(appValidacao);
   freeCLI(resultado);
   return 0;
 }

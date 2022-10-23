@@ -3,9 +3,9 @@
 #include "./validacao.h"
 #include "../parametros/parametros.h"
 
-int updateForOneInput(CLI_Result result, char *name, char **receiver, ApplicationContext *appContext, int required)
+int updateForOneInput(CLI_Result resultado, char *name, char **receiver, ApplicationContext *appContext, int required)
 {
-  CLI_Value *value = getCLIValue(result, name);
+  CLI_Value *value = getCLIValue(resultado, name);
   if (value)
   {
     *receiver = value->value;
@@ -21,9 +21,9 @@ int updateForOneInput(CLI_Result result, char *name, char **receiver, Applicatio
   return !!value;
 }
 
-int updateForTwoInputs(CLI_Result result, char *name, ApplicationContext *appContext)
+int updateForTwoInputs(CLI_Result resultado, char *name, ApplicationContext *appContext)
 {
-  CLI_Value *value = getCLIValue(result, name);
+  CLI_Value *value = getCLIValue(resultado, name);
   if (value)
   {
     appContext->input1 = value->value;
@@ -40,18 +40,18 @@ int updateForTwoInputs(CLI_Result result, char *name, ApplicationContext *appCon
   return !!value;
 }
 
-ApplicationContext *getAppContext(CLI_Result result)
+ApplicationContext *getAppContext(CLI_Result resultado)
 {
   ApplicationContext *appContext = malloc(sizeof(ApplicationContext));
   appContext->err = 0;
 
-  appContext->outputProvided = updateForOneInput(result, OUTPUT, &appContext->output, appContext, 1);
-  appContext->dot = updateForOneInput(result, DOT, &appContext->input1, appContext, 0);
-  appContext->complemento = updateForOneInput(result, COMPLEMENTO, &appContext->input1, appContext, 0);
-  appContext->minimizacao = updateForOneInput(result, MINIMIZACAO, &appContext->input1, appContext, 0);
-  appContext->intersecao = updateForTwoInputs(result, INTERSECAO, appContext);
-  appContext->uniao = updateForTwoInputs(result, UNIAO, appContext);
-  appContext->reconhecer = updateForTwoInputs(result, RECONHECER, appContext);
+  appContext->outputProvided = updateForOneInput(resultado, OUTPUT, &appContext->output, appContext, 1);
+  appContext->dot = updateForOneInput(resultado, DOT, &appContext->input1, appContext, 0);
+  appContext->complemento = updateForOneInput(resultado, COMPLEMENTO, &appContext->input1, appContext, 0);
+  appContext->minimizacao = updateForOneInput(resultado, MINIMIZACAO, &appContext->input1, appContext, 0);
+  appContext->intersecao = updateForTwoInputs(resultado, INTERSECAO, appContext);
+  appContext->uniao = updateForTwoInputs(resultado, UNIAO, appContext);
+  appContext->reconhecer = updateForTwoInputs(resultado, RECONHECER, appContext);
 
   return appContext;
 }

@@ -1,22 +1,14 @@
-4
-par_par
-par_impar
-impar_par
-impar_impar
+2
+par
+impar
 2
 0
 1
-8
-par_par 0 impar_impar
-par_par 1 impar_impar
-par_impar 0 impar_par
-par_impar 1 impar_par
-impar_par 0 par_impar
-impar_par 1 par_impar
-impar_impar 0 par_par
-impar_impar 1 par_par
-par_par
-3
-par_par
-par_impar
-impar_par
+4
+par 0 impar
+par 1 impar
+impar 0 par
+impar 1 par
+par
+1
+impar

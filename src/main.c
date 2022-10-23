@@ -5,19 +5,19 @@
 /**
  * Registra os parametros necessarios para o funcionamento da CLI da aplicacao.
  */
-CLI_Params *createCLIParams()
+CLI_Params *criaCLIParams()
 {
-  CLI_Params *params = getParams(10); 
+  CLI_Params *parametros = getParams(10); 
 
-  registerParam(params, DOT, 1);
-  registerParam(params, OUTPUT, 1);
-  registerParam(params, COMPLEMENTO, 1);
-  registerParam(params, INTERSECAO, 2);
-  registerParam(params, UNIAO, 2);
-  registerParam(params, MINIMIZACAO, 1);
-  registerParam(params, RECONHECER, 2);
+  registerParam(parametros, DOT, 1);
+  registerParam(parametros, OUTPUT, 1);
+  registerParam(parametros, COMPLEMENTO, 1);
+  registerParam(parametros, INTERSECAO, 2);
+  registerParam(parametros, UNIAO, 2);
+  registerParam(parametros, MINIMIZACAO, 1);
+  registerParam(parametros, RECONHECER, 2);
 
-  return params;
+  return parametros;
 }
 
 /**
@@ -26,8 +26,8 @@ CLI_Params *createCLIParams()
  */
 int main(int argc, char *argv[])
 {
-  CLI_Params *params = createCLIParams();
-  CLI_Result *resultado = readCLI(params, argc, argv);
+  CLI_Params *parametros = criaCLIParams();
+  CLI_Result *resultado = readCLI(parametros, argc, argv);
 
   ApplicationContext *appContext = getAppContext(*resultado);
   if (appContext->err)

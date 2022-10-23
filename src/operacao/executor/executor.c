@@ -1,52 +1,52 @@
 #include <stdlib.h>
 #include "../reconhecimento/reconhecimento.h"
 
-void executeOperation(ApplicationContext context)
+void executeOperation(ApplicationContext validacao)
 {
-  AFD *afd = readAFD(context.input1);
+  AFD *afd = readAFD(validacao.input1);
   AFD *resultado = NULL;
-  if (context.dot)
+  if (validacao.dot)
   {
     DOTFormat *dotFormat = visualizacao(afd);
-    writeDot(dotFormat, context.output);
+    writeDot(dotFormat, validacao.output);
     freeDot(dotFormat);
   }
-  if (context.complemento)
+  if (validacao.complemento)
   {
     resultado = complemento(afd);
   }
-  if (context.intersecao)
+  if (validacao.intersecao)
   {
-    AFD *afd2 = readAFD(context.input2);
+    AFD *afd2 = readAFD(validacao.input2);
     resultado = intersecao(afd, afd2);
     freeAFD(afd2);
   }
-  if (context.uniao)
+  if (validacao.uniao)
   {
-    AFD *afd2 = readAFD(context.input2);
+    AFD *afd2 = readAFD(validacao.input2);
     resultado = uniao(afd, afd2);
     freeAFD(afd2);
   }
-  if (context.minimizacao)
+  if (validacao.minimizacao)
   {
     resultado = minimizacao(afd);
   }
-  if (context.reconhecer)
+  if (validacao.reconhecer)
   {
     int tamanho;
-    char **words = readWords(context.input2, &tamanho);
+    char **words = readWords(validacao.input2, &tamanho);
     if (!words)
     {
       return;
     }
     int *resultados = reconhecer(afd, words, tamanho);
-    writeReconhecerResult(resultados, context.output, tamanho);
+    writeReconhecerResult(resultados, validacao.output, tamanho);
     free(resultados);
     freeWords(words, tamanho);
   }
   if (resultado)
   {
-    writeAFD(*resultado, context.output);
+    writeAFD(*resultado, validacao.output);
     freeAFD(resultado);
   }
   freeAFD(afd);

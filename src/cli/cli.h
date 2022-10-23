@@ -13,12 +13,12 @@ typedef struct cli_item
 
 /**
  * Conjunto de parametros registrados para o funcionamento da CLI. Possui um conjunto de itens, que sao registrados
- * pelo usuario da biblioteca, um tamanho (items_size), e o tamanho real do array, para fins de controle interno (size).
+ * pelo usuario da biblioteca, um tamanho (items_size), e o tamanho real do array, para fins de controle interno (tamanho).
 */
 typedef struct cli_structure
 {
   CLI_Item **items;
-  int size;
+  int tamanho;
   int items_size;
 } CLI_Params;
 
@@ -40,7 +40,7 @@ typedef struct cli_result
 {
   CLI_Params *params;
   CLI_Value **values;
-  int size;
+  int tamanho;
 } CLI_Result;
 
 /**

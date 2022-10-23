@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "./recognition.h"
+#include "./reconhecimento.h"
 #include "../../strings/stringutil.h"
 
 char **readWords(char *fileName, int *size_ptr)

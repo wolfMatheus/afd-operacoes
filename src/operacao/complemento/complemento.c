@@ -1,18 +1,20 @@
-#include "../operations.h"
+
+
+#include "../operacoes.h"
 #include <stdlib.h>
 #include "../../strings/stringutil.h"
 
 AFD *complemento(AFD *afd)
 {
   AFD *novoAfd = getEmptyAFD();
-  novoAfd->estado = malloc((*afd->estadoNumerico) * sizeof(char *));
-  for (int i = 0; i < *afd->estadoNumerico; i++)
+  novoAfd->estados = malloc((*afd->estados_numericos) * sizeof(char *));
+  for (int i = 0; i < *afd->estados_numericos; i++)
   {
-    char *estado = afd->estado[i];
+    char *estado = afd->estados[i];
     char *copiaDoEstado = copyString(estado);
-    novoAfd->estado[i] = copiaDoEstado;
+    novoAfd->estados[i] = copiaDoEstado;
   }
-  *novoAfd->estadoNumerico = *afd->estadoNumerico;
+  *novoAfd->estados_numericos = *afd->estados_numericos;
 
   novoAfd->alphabet = malloc((*afd->numero_simbolos) * sizeof(char *));
   for (int i = 0; i < *afd->numero_simbolos; i++)
@@ -23,7 +25,7 @@ AFD *complemento(AFD *afd)
   }
   *novoAfd->numero_simbolos = *afd->numero_simbolos;
 
-  novoAfd->transicoes = malloc((*afd->transicoes_numerica) * sizeof(transicao *));
+  novoAfd->transicoes = malloc((*afd->transicoes_numerica) * sizeof(Transition *));
   for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
     Transition *transicao = afd->transicoes[i];
@@ -36,11 +38,11 @@ AFD *complemento(AFD *afd)
   *novoAfd->transicoes_numerica = *afd->transicoes_numerica;
   *novoAfd->estado_inicial = *afd->estado_inicial;
 
-  int numeroEstadoFinal = (*afd->estadoNumerico) - (*afd->numero_estado_final);
+  int numeroEstadoFinal = (*afd->estados_numericos) - (*afd->numero_estado_final);
   novoAfd->estado_final = malloc(sizeof(int) * numeroEstadoFinal);
   *novoAfd->numero_estado_final = numeroEstadoFinal;
   int estadoFinalAtual = 0;
-  for (int i = 0; i < *afd->estadoNumerico; i++)
+  for (int i = 0; i < *afd->estados_numericos; i++)
   {
     int isFinal = 0;
     for (int j = 0; j < *afd->numero_estado_final; j++)

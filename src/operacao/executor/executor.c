@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../recognition/recognition.h"
+#include "../reconhecimento/reconhecimento.h"
 
 void executeOperation(ApplicationContext context)
 {

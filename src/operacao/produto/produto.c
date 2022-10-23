@@ -1,4 +1,4 @@
-#include "./product.h"
+#include "./produto.h"
 #include "../../strings/stringutil.h"
 #include <string.h>
 #include <stdio.h>
@@ -11,9 +11,9 @@ int doubleTransitionFunction(AFD *produtoAfd, AFD *afd1, AFD *afd2, char *state1
   char *concattedValue = concatWithComma(value1, value2);
 
   int foundIndex = -1;
-  for (int i = 0; i < *produtoAfd->estadoNumerico; i++)
+  for (int i = 0; i < *produtoAfd->estados_numericos; i++)
   {
-    if (!strcmp(concattedValue, produtoAfd->states[i]))
+    if (!strcmp(concattedValue, produtoAfd->estados[i]))
     {
       foundIndex = i;
       break;
@@ -35,18 +35,18 @@ AFD *afdProduct(AFD *afd1, AFD *afd2)
     produtoAfd->alphabet[i] = newSymbol;
   }
 
-  int numberOfStates = (*afd1->estadoNumerico) * (*afd2->estadoNumerico);
-  *produtoAfd->estadoNumerico = numberOfStates;
-  produtoAfd->states = malloc(sizeof(char *) * numberOfStates);
+  int numberOfStates = (*afd1->estados_numericos) * (*afd2->estados_numericos);
+  *produtoAfd->estados_numericos = numberOfStates;
+  produtoAfd->estados = malloc(sizeof(char *) * numberOfStates);
   int currentStateIndex = 0;
-  for (int i = 0; i < *afd1->estadoNumerico; i++)
+  for (int i = 0; i < *afd1->estados_numericos; i++)
   {
-    char *state1 = afd1->states[i];
-    for (int j = 0; j < *afd2->estadoNumerico; j++)
+    char *state1 = afd1->estados[i];
+    for (int j = 0; j < *afd2->estados_numericos; j++)
     {
-      char *state2 = afd2->states[j];
+      char *state2 = afd2->estados[j];
       char *productState = concatWithComma(state1, state2);
-      produtoAfd->states[currentStateIndex] = productState;
+      produtoAfd->estados[currentStateIndex] = productState;
       if (i == *afd1->estado_inicial && j == *afd2->estado_inicial)
       {
         *produtoAfd->estado_inicial = currentStateIndex;
@@ -58,10 +58,10 @@ AFD *afdProduct(AFD *afd1, AFD *afd2)
   *produtoAfd->transicoes_numerica = numberOfStates * (*produtoAfd->numero_simbolos);
   produtoAfd->transicoes = malloc(sizeof(Transition *) * (*produtoAfd->transicoes_numerica));
   int indiceTransicaoAtual = 0;
-  for (int i = 0; i < *produtoAfd->estadoNumerico; i++)
+  for (int i = 0; i < *produtoAfd->estados_numericos; i++)
   {
-    char *estado= produtoAfd->states[i];
-    char **splitted = splitByComma(state);
+    char *estado= produtoAfd->estados[i];
+    char **splitted = splitByComma(estado);
     for (int j = 0; j < *produtoAfd->numero_simbolos; j++)
     {
       char *simbolo = produtoAfd->alphabet[j];
@@ -70,7 +70,7 @@ AFD *afdProduct(AFD *afd1, AFD *afd2)
       *transicao->from = i;
       *transicao->to = resultado;
       *transicao->read = j;
-      produtoAfd->transicoes[indiceTransicaoAtual] = transition;
+      produtoAfd->transicoes[indiceTransicaoAtual] = transicao;
       indiceTransicaoAtual++;
     }
     freeSplit(splitted);

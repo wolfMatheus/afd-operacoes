@@ -1,4 +1,4 @@
-#include "../recognition/recognition.h"
+#include "../reconhecimento/reconhecimento.h"
 #include "../../strings/stringutil.h"
 #include <string.h>
 #include <stdio.h>
@@ -94,7 +94,7 @@ AFD *copyAFDWithoutUnreachableStates(AFD *afd)
   alcancaveis[0] = *afd->estado_inicial;
   updateReachableList(afd, &alcancaveis, &tamanhoAlcancavel, *afd->estado_inicial);
 
-  *novoAfd->estadoNumerico = tamanhoAlcancavel;
+  *novoAfd->estados_numericos = tamanhoAlcancavel;
   novoAfd->estados= malloc(sizeof(char *) * tamanhoAlcancavel);
   novoAfd->estado_final = malloc(sizeof(int));
   int tamanhoFinalDeAlocacaoEstado = 1;
@@ -121,7 +121,7 @@ AFD *copyAFDWithoutUnreachableStates(AFD *afd)
   novoAfd->transicoes = malloc(sizeof(Transition *));
   for (int i = 0; i < tamanhoAlcancavel; i++)
   {
-    int elemento= reachables[i];
+    int elemento= alcancaveis[i];
     for (int j = 0; j < *afd->transicoes_numerica; j++)
     {
       Transition *transicao = afd->transicoes[j];
@@ -172,7 +172,7 @@ AFD *minimizacao(AFD *initialAfd)
   int **grupoEquivalencia = malloc(sizeof(int *) * 2);
   int *tamanhos = malloc(sizeof(int) * 2);
   tamanhos[0] = *afd->numero_estado_final;
-  tamanhos[1] = *afd->estadoNumerico - (*afd->numero_estado_final);
+  tamanhos[1] = *afd->estados_numericos - (*afd->numero_estado_final);
   int totalDeGrupos = !tamanhos[0] || !tamanhos[1] ? 1 : 2;
   grupoEquivalencia[0] = tamanhos[0] ? malloc(sizeof(int) * tamanhos[0]) : NULL;
   grupoEquivalencia[1] = tamanhos[1] ? malloc(sizeof(int) * tamanhos[1]) : NULL;
@@ -188,7 +188,7 @@ AFD *minimizacao(AFD *initialAfd)
     grupoEquivalencia[0][i] = afd->estado_final[i];
   }
   int indiceEstadoInicialAtual = 0;
-  for (int i = 0; i < *afd->estadoNumerico; i++)
+  for (int i = 0; i < *afd->estados_numericos; i++)
   {
     if (isContained(afd->estado_final, i, *afd->numero_estado_final))
     {
@@ -256,7 +256,7 @@ AFD *minimizacao(AFD *initialAfd)
   } while (changed);
 
   AFD *novoAfd = getEmptyAFD();
-  *novoAfd->estadoNumerico = totalDeGrupos;
+  *novoAfd->estados_numericos = totalDeGrupos;
   novoAfd->estados= malloc(sizeof(char *) * totalDeGrupos);
   for (int i = 0; i < totalDeGrupos; i++)
   {
@@ -301,7 +301,7 @@ AFD *minimizacao(AFD *initialAfd)
   }
   *novoAfd->numero_estado_final = estadosFinaisTotais;
 
-  int numeroTransicoes = *novoAfd->estadoNumerico * (*afd->numero_simbolos);
+  int numeroTransicoes = *novoAfd->estados_numericos * (*afd->numero_simbolos);
   novoAfd->transicoes = malloc(sizeof(Transition *) * numeroTransicoes);
   *novoAfd->transicoes_numerica = numeroTransicoes;
   int indiceTransicaoAtual = 0;

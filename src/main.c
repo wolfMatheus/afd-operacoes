@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <string.h>
-#include "./operations/operations.h"
+#include "./operacao/operacoes.h"
 
 /**
  * Registra os parametros necessarios para o funcionamento da CLI da aplicacao.
  */
 CLI_Params *createCLIParams()
 {
-  CLI_Params *params = getParams(10);
+  CLI_Params *params = getParams(10); 
 
   registerParam(params, DOT, 1);
   registerParam(params, OUTPUT, 1);

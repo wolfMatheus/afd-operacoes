@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../recognition/recognition.h"
+#include "../reconhecimento/reconhecimento.h"
 
 /**
  * Funcao responsavel por gerar um produto de AFDs. Essa funcao nao modifica em nada nenhum dos dois AFDs recebidos.

@@ -15,28 +15,28 @@ typedef struct transition_est
 
 /** 
  * Estrutura que representa um AFD.
- * states: array de estados de tamanho number_states.
- * alphabet: array de simbolos de tamanho number_symbols.
- * initial_state: estado inicial, indice sobre o array de estados.
- * final_states: estados finais, array de indices sobre o array de estados, de tamanho number_final_states
- * transitions: array de transicoes de tamanho number_transitions. 
+ * estados: array de estados de tamanho estados_numericos.
+ * alphabet: array de simbolos de tamanho numero_simbolos.
+ * estado_inicial: estado inicial, indice sobre o array de estados.
+ * estado_final: estados finais, array de indices sobre o array de estados, de tamanho numero_estado_final
+ * transicoes: array de transicoes de tamanho transicoes_numerica. 
 */
 typedef struct afd_est
 {
 
-  char **states;
-  int *number_states;
+  char **estados;
+  int *estados_numericos;
 
   char **alphabet;
-  int *number_symbols;
+  int *numero_simbolos;
 
-  int *initial_state;
+  int *estado_inicial;
 
-  int *final_states;
-  int *number_final_states;
+  int *estado_final;
+  int *numero_estado_final;
 
-  Transition **transitions;
-  int *number_transitions;
+  Transition **transicoes;
+  int *transicoes_numerica;
 
 } AFD;
 
@@ -60,10 +60,10 @@ Transition *getEmptyTransition();
 /**
  * Busca e retorna a posicao do estado no AFD provido.
  * @param afd: afd alvo
- * @param state: estado a ser procurado
+ * @param estado: estado a ser procurado
  * @return o indice caso encontre, -1 caso contrario.
 */
-int getStatePosition(AFD afd, char *state);
+int getStatePosition(AFD afd, char *estado);
 
 /**
  * Busca e retorna a posicao do simbolo no AFD provido.

@@ -1,11 +1,11 @@
 #include "../../strings/stringutil.h"
-#include "./recognition.h"
+#include "./reconhecimento.h"
 #include <string.h>
 #include <stdlib.h>
 
 char *transitionFunction(AFD *afd, char *simbolo, char *estadoAtual)
 {
-  for (int i = 0; i < *afd->numero_transicoes; i++)
+  for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
     Transition *transicao = afd->transicoes[i];
     char *fromState = afd->estados[*transicao->from];
@@ -37,9 +37,9 @@ char *extendedTransitionFunction(AFD *afd, char *word, char *estadoAtual)
 
 int isFinalState(AFD *afd, char *estado)
 {
-  for (int i = 0; i < *afd->numeroEstadoFinal; i++)
+  for (int i = 0; i < *afd->numero_estado_final; i++)
   {
-    char *estadoFinal = afd->estados[afd->final_states[i]];
+    char *estadoFinal = afd->estados[afd->estado_final[i]];
     if (!strcmp(estadoFinal, estado))
       return 1;
   }

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../operations.h"
+#include "../operacoes.h"
 
 /**
  * Le palavras do arquivo com nome informado, e armazena o tamanho no ponteiro recebido.
@@ -10,7 +10,7 @@
 char **readWords(char *fileName, int *size_ptr);
 
 /**
- * Libera um array de palavras de tamanho size.
+ * Libera um array de palavras de tamanho tamanho.
  * @param words: array de palavras.
  * @param tamanho: tamanho do array.
 */

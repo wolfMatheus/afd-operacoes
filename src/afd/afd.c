@@ -5,11 +5,11 @@
 AFD *getEmptyAFD()
 {
   AFD *afd = malloc(sizeof(AFD));
-  afd->number_states = malloc(sizeof(int));
-  afd->number_symbols = malloc(sizeof(int));
-  afd->number_transitions = malloc(sizeof(int));
-  afd->number_final_states = malloc(sizeof(int));
-  afd->initial_state = malloc(sizeof(int));
+  afd->estados_numericos = malloc(sizeof(int));
+  afd->numero_simbolos = malloc(sizeof(int));
+  afd->transicoes_numerica = malloc(sizeof(int));
+  afd->numero_estado_final = malloc(sizeof(int));
+  afd->estado_inicial = malloc(sizeof(int));
 }
 
 Transition *getTransition(AFD afd, char *from, char *to, char *read)
@@ -17,22 +17,22 @@ Transition *getTransition(AFD afd, char *from, char *to, char *read)
   int fromPosition = getStatePosition(afd, from);
   int toPosition = getStatePosition(afd, to);
   int readPosition = getSymbolPosition(afd, read);
-  Transition *transition = malloc(sizeof(Transition));
-  transition->from = malloc(sizeof(int));
-  transition->to = malloc(sizeof(int));
-  transition->read = malloc(sizeof(int));
+  Transition *transicao = malloc(sizeof(Transition));
+  transicao->from = malloc(sizeof(int));
+  transicao->to = malloc(sizeof(int));
+  transicao->read = malloc(sizeof(int));
 
-  *transition->from = fromPosition;
-  *transition->to = toPosition;
-  *transition->read = readPosition;
-  return transition;
+  *transicao->from = fromPosition;
+  *transicao->to = toPosition;
+  *transicao->read = readPosition;
+  return transicao;
 }
 
-int getStatePosition(AFD afd, char *state)
+int getStatePosition(AFD afd, char *estado)
 {
-  for (int i = 0; i < *afd.number_states; i++)
+  for (int i = 0; i < *afd.estados_numericos; i++)
   {
-    if (!strcmp(afd.states[i], state))
+    if (!strcmp(afd.estados[i], estado))
       return i;
   }
   return -1;
@@ -40,7 +40,7 @@ int getStatePosition(AFD afd, char *state)
 
 int getSymbolPosition(AFD afd, char *symbol)
 {
-  for (int i = 0; i < *afd.number_symbols; i++)
+  for (int i = 0; i < *afd.numero_simbolos; i++)
   {
     if (!strcmp(afd.alphabet[i], symbol))
       return i;
@@ -75,9 +75,9 @@ void readChars(char ***list_ptr, int *size_ptr, FILE *file)
 
 void readTransitions(AFD *afd, FILE *file)
 {
-  readInt(afd->number_transitions, file);
-  afd->transitions = malloc(sizeof(Transition *) * (*afd->number_transitions));
-  for (int i = 0; i < *afd->number_transitions; i++)
+  readInt(afd->transicoes_numerica, file);
+  afd->transicoes = malloc(sizeof(Transition *) * (*afd->transicoes_numerica));
+  for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
     char buffer1[100], buffer2[100], buffer3[100];
     fscanf(file, "%s %s %s\n", buffer1, buffer2, buffer3);
@@ -86,14 +86,14 @@ void readTransitions(AFD *afd, FILE *file)
     int readPosition = getSymbolPosition(*afd, buffer2);
     int toPosition = getStatePosition(*afd, buffer3);
 
-    Transition *transition = malloc(sizeof(Transition));
-    transition->from = malloc(sizeof(int));
-    transition->to = malloc(sizeof(int));
-    transition->read = malloc(sizeof(int));
-    *transition->from = fromPosition;
-    *transition->read = readPosition;
-    *transition->to = toPosition;
-    afd->transitions[i] = transition;
+    Transition *transicao = malloc(sizeof(Transition));
+    transicao->from = malloc(sizeof(int));
+    transicao->to = malloc(sizeof(int));
+    transicao->read = malloc(sizeof(int));
+    *transicao->from = fromPosition;
+    *transicao->read = readPosition;
+    *transicao->to = toPosition;
+    afd->transicoes[i] = transicao;
   }
 }
 
@@ -102,29 +102,29 @@ void readInitialState(AFD *afd, FILE *file)
   char buffer[100];
   fscanf(file, "%s\n", buffer);
   int statePosition = getStatePosition(*afd, buffer);
-  *afd->initial_state = statePosition;
+  *afd->estado_inicial = statePosition;
 }
 
 void readFinalStates(AFD *afd, FILE *file)
 {
-  readInt(afd->number_final_states, file);
-  afd->final_states = malloc(sizeof(int *) * (*afd->number_final_states));
-  for (int i = 0; i < *afd->number_final_states; i++)
+  readInt(afd->numero_estado_final, file);
+  afd->estado_final = malloc(sizeof(int *) * (*afd->numero_estado_final));
+  for (int i = 0; i < *afd->numero_estado_final; i++)
   {
     char buffer[100];
     fscanf(file, "%s\n", buffer);
     int statePosition = getStatePosition(*afd, buffer);
-    afd->final_states[i] = statePosition;
+    afd->estado_final[i] = statePosition;
   }
 }
 
 Transition *getEmptyTransition()
 {
-  Transition *transition = malloc(sizeof(Transition));
-  transition->from = malloc(sizeof(int));
-  transition->to = malloc(sizeof(int));
-  transition->read = malloc(sizeof(int));
-  return transition;
+  Transition *transicao = malloc(sizeof(Transition));
+  transicao->from = malloc(sizeof(int));
+  transicao->to = malloc(sizeof(int));
+  transicao->read = malloc(sizeof(int));
+  return transicao;
 }
 
 AFD *readAFD(char *fileName)
@@ -135,8 +135,8 @@ AFD *readAFD(char *fileName)
     return NULL;
   }
   AFD *afd = getEmptyAFD();
-  readChars(&afd->states, afd->number_states, file);
-  readChars(&afd->alphabet, afd->number_symbols, file);
+  readChars(&afd->estados, afd->estados_numericos, file);
+  readChars(&afd->alphabet, afd->numero_simbolos, file);
   readTransitions(afd, file);
   readInitialState(afd, file);
   readFinalStates(afd, file);
@@ -155,10 +155,10 @@ void writeChar(char *value, FILE *file)
   fprintf(file, "%s\n", value);
 }
 
-void writeChars(char **list, int size, FILE *file)
+void writeChars(char **list, int tamanho, FILE *file)
 {
-  writeInt(size, file);
-  for (int i = 0; i < size; i++)
+  writeInt(tamanho, file);
+  for (int i = 0; i < tamanho; i++)
   {
     writeChar(list[i], file);
   }
@@ -166,27 +166,27 @@ void writeChars(char **list, int size, FILE *file)
 
 void writeTransitions(AFD afd, FILE *file)
 {
-  int size = *afd.number_transitions;
-  writeInt(size, file);
-  for (int i = 0; i < size; i++)
+  int tamanho = *afd.transicoes_numerica;
+  writeInt(tamanho, file);
+  for (int i = 0; i < tamanho; i++)
   {
-    Transition *element = afd.transitions[i];
-    char *from = afd.states[*element->from];
+    Transition *element = afd.transicoes[i];
+    char *from = afd.estados[*element->from];
     char *read = afd.alphabet[*element->read];
-    char *to = afd.states[*element->to];
+    char *to = afd.estados[*element->to];
     fprintf(file, "%s %s %s\n", from, read, to);
   }
 }
 
 void writeFinalStates(AFD afd, FILE *file)
 {
-  int size = *afd.number_final_states;
-  char *finalStates[size];
-  for (int i = 0; i < size; i++)
+  int tamanho = *afd.numero_estado_final;
+  char *estadosFinais[tamanho];
+  for (int i = 0; i < tamanho; i++)
   {
-    finalStates[i] = afd.states[afd.final_states[i]];
+    estadosFinais[i] = afd.estados[afd.estado_final[i]];
   }
-  writeChars(finalStates, size, file);
+  writeChars(estadosFinais, tamanho, file);
 }
 
 void writeAFD(AFD afd, char *fileName)
@@ -196,42 +196,42 @@ void writeAFD(AFD afd, char *fileName)
   {
     return;
   }
-  writeChars(afd.states, *afd.number_states, file);
-  writeChars(afd.alphabet, *afd.number_symbols, file);
+  writeChars(afd.estados, *afd.estados_numericos, file);
+  writeChars(afd.alphabet, *afd.numero_simbolos, file);
   writeTransitions(afd, file);
-  writeChar(afd.states[*afd.initial_state], file);
+  writeChar(afd.estados[*afd.estado_inicial], file);
   writeFinalStates(afd, file);
 }
 
-void freeTransition(Transition *transition)
+void freeTransition(Transition *transicao)
 {
-  free(transition->from);
-  free(transition->to);
-  free(transition->read);
+  free(transicao->from);
+  free(transicao->to);
+  free(transicao->read);
 }
 
 void freeAFD(AFD *afd)
 {
-  for (int i = 0; i < *afd->number_states; i++)
+  for (int i = 0; i < *afd->estados_numericos; i++)
   {
-    free(afd->states[i]);
+    free(afd->estados[i]);
   }
-  for (int i = 0; i < *afd->number_symbols; i++)
+  for (int i = 0; i < *afd->numero_simbolos; i++)
   {
     free(afd->alphabet[i]);
   }
-  for (int i = 0; i < *afd->number_transitions; i++)
+  for (int i = 0; i < *afd->transicoes_numerica; i++)
   {
-    freeTransition(afd->transitions[i]);
+    freeTransition(afd->transicoes[i]);
   }
 
-  free(afd->transitions);
+  free(afd->transicoes);
   free(afd->alphabet);
-  free(afd->states);
-  free(afd->final_states);
-  free(afd->number_states);
-  free(afd->number_symbols);
-  free(afd->number_final_states);
-  free(afd->number_transitions);
-  free(afd->initial_state);
+  free(afd->estados);
+  free(afd->estado_final);
+  free(afd->estados_numericos);
+  free(afd->numero_simbolos);
+  free(afd->numero_estado_final);
+  free(afd->transicoes_numerica);
+  free(afd->estado_inicial);
 }

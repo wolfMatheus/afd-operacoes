@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "../cli/cli.h"
-#include "../params/params.h"
+#include "../parametros/parametros.h"
 
 /**
  * Estrutura que representa o contexto de aplicacao, basicamente armazenando quais parametros foram informados e 

@@ -45,7 +45,7 @@ DOTFormat *getDOTFormat(char **double_circles, int numero_circulos_duplos, DOTTr
 
 /**
  * Libera a memoria alocada por uma DOTTransition.
- * @param transition: transicao a ser liberada.
+ * @param transicao: transicao a ser liberada.
 */
 void freeDotTransition(DOTTransition *transition);
 

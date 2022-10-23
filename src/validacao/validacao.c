@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./context.h"
-#include "../params/params.h"
+#include "./validacao.h"
+#include "../parametros/parametros.h"
 
 int updateForOneInput(CLI_Result result, char *name, char **receiver, ApplicationContext *appContext, int required)
 {
